@@ -11,9 +11,9 @@ import passport from "passport";
 import {Strategy as LocalStrategy} from "passport-local";
 import * as path from "path";
 import {passportConfig} from "./config/passport";
-import {User} from "./models/User";
 import {router as indexRouter} from "./routes/index";
 import {router as usersRouter, routes} from "./routes/users";
+import {sockets as socket} from "./sockets";
 
 const app = express();
 
@@ -73,6 +73,10 @@ routes(passport);
 // set server port
 app.set("port", process.env.SERVER_PORT || 8080);
 // start the Express server
-app.listen(app.get("port"), () => {
+const server =
+    app.listen(app.get("port"), () => {
     console.log(`Server is started on port ${app.get("port")}`);
 });
+
+// setup sockets
+socket(server);

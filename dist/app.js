@@ -22,6 +22,7 @@ const path = __importStar(require("path"));
 const passport_2 = require("./config/passport");
 const index_1 = require("./routes/index");
 const users_1 = require("./routes/users");
+const sockets_1 = require("./sockets");
 const app = express_1.default();
 // initialize configuration
 dotenv_1.default.config();
@@ -65,7 +66,9 @@ users_1.routes(passport_1.default);
 // set server port
 app.set("port", process.env.SERVER_PORT || 8080);
 // start the Express server
-app.listen(app.get("port"), () => {
+const server = app.listen(app.get("port"), () => {
     console.log(`Server is started on port ${app.get("port")}`);
 });
+// setup sockets
+sockets_1.sockets(server);
 //# sourceMappingURL=app.js.map

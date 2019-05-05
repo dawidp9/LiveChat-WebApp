@@ -1,12 +1,14 @@
 import bcrypt from "bcryptjs";
 import {NextFunction, Request, Response} from "express";
-import passport from "passport";
-import {passportConfig} from "../config/passport";
 import {User} from "../models/User";
+
+interface IError {
+    msg: string;
+}
 
 export function register(req: Request, res: Response) {
     const { username, email, password, password2 } = req.body;
-    const errors: any = [];
+    const errors: IError[] = [];
 
     // check required fields
     if (!username || !email || !password || !password2) {

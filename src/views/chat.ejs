@@ -1,8 +1,87 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
-        <div class="card card-body text-center">
-            <h1>Welcome <%= username %></h1>
+        <div id="welcome" class="card card-body text-center">
+            <h1>Welcome <span><%= username %></span></h1>
         </div>
-        <a id="logoutbtn" href="/logout" class="btn btn-outline-primary btn-lg btn-block">Logout</a>
+        <div id="chat-window" class="jumbotron">
+            <div id="output"></div>
+            <div id="feedback"></div>
+        </div>
+        <form action="" id="form">
+            <input id="message" type="text" autocomplete="off" class="form-control form-control-lg" placeholder="Type message ..."/>
+            <button type="submit" id="send" class="btn btn-outline-info btn-lg btn-block">Send</button>
+        </form>
+        <a id="logoutbtn" href="/logout" class="btn btn-outline-warning btn-lg btn-block">Logout</a>
     </div>
 </div>
+<script lang="ts">
+    const socket = io();
+
+    const message = document.getElementById('message');
+    const output = document.getElementById('output');
+    const feedback = document.getElementById('feedback');
+    const btn = document.getElementById('send');
+    const logoutbtn = document.getElementById('logoutbtn');
+    const username = "<%= username %>";
+    socket.emit('chatconnect', username);
+
+    // emmit events
+    btn.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (message.value !== "") {
+            socket.emit('message', {
+                message: message.value,
+                username: username
+            });
+        }
+        message.value = "";
+    });
+
+    logoutbtn.addEventListener('click', () => {
+        socket.emit('leave', username);
+    });
+
+    message.addEventListener('keypress', () => {
+        if (message.value !== "") {
+            socket.emit('typing', username);
+        }
+    });
+
+    message.addEventListener('focusout', () => {
+        socket.emit('typingoff');
+    });
+
+
+
+    // listen for events
+    socket.on('message', (data) => {
+        feedback.innerHTML = '';
+        output.innerHTML += '<p><strong>' + data.username + ': </strong>' + data.message + '</p>';
+        output.scrollTop = output.scrollHeight;
+    });
+
+    socket.on('typing', (typingusername) => {
+        feedback.innerHTML = '<p><em>' + typingusername + ' is typing message ...</em></p>';
+    });
+
+    socket.on('typingoff', () => {
+        feedback.innerHTML = '';
+    });
+
+
+    socket.on('chatconnect', (conusername) => {
+        output.innerHTML += '<p><em>' + conusername + ' join chat room.</em></p>';
+        output.scrollTop = output.scrollHeight;
+    });
+
+    socket.on('leave', (leaveusername) => {
+        output.innerHTML += '<p><em>' + leaveusername + ' leave chat room.</em></p>';
+        output.scrollTop = output.scrollHeight;
+    });
+
+    socket.on('disconnect', (reason) => {
+        socket.emit('leave', username);
+        // else the socket will automatically try to reconnect
+    });
+</script>
