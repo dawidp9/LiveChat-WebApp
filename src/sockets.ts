@@ -3,8 +3,8 @@ import {Server} from "http";
 import socket, {Socket} from "socket.io";
 
 interface IData {
-    message: string,
-    username: string
+    message: string;
+    username: string;
 }
 
 export function sockets(server: Server) {
@@ -34,7 +34,6 @@ export function sockets(server: Server) {
         });
 
         consocket.on("disconnect", () => {
-
             console.log("user disconnect");
         });
     });

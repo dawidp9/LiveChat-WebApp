@@ -1,5 +1,5 @@
 .login-form {
-    width: 70%;
+    width: auto;
     margin: 50px auto;
 }
 .login-form form {
@@ -18,7 +18,7 @@
 }
 
 .register-form {
-    width: 70%;
+    width: auto;
     margin: 50px auto;
 }
 .register-form form {
@@ -34,7 +34,7 @@
 }
 
 #output {
-    width: 70%;
+    width: auto;
     height: 250px;
     overflow-y: scroll;
 }
