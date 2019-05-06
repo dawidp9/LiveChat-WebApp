@@ -13,7 +13,6 @@ function sockets(server) {
         });
         consocket.on("message", (data) => {
             io.sockets.emit("message", data);
-            console.log(data.username + " message: " + data.message);
         });
         consocket.on("typing", (username) => {
             consocket.broadcast.emit("typing", username);

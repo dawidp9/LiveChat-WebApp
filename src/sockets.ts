@@ -18,7 +18,6 @@ export function sockets(server: Server) {
 
         consocket.on("message", (data: IData) => {
             io.sockets.emit("message", data);
-            console.log(data.username + " message: " + data.message);
         });
 
         consocket.on("typing", (username: string) => {
